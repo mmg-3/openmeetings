@@ -84,9 +84,9 @@ public class KRoom {
 		return chunkDao;
 	}
 
-	public KStream join(final StreamDesc sd, KurentoHandler kHandler) {
+	public KStream join(final StreamDesc sd) {
 		log.info("ROOM {}: join client {}, stream: {}", room.getId(), sd.getClient(), sd.getUid());
-		final KStream stream = new KStream(sd, this, kHandler);
+		final KStream stream = new KStream(sd, this);
 		processor.addStream(stream);
 		return stream;
 	}
@@ -253,7 +253,7 @@ public class KRoom {
 						StreamDesc sd = c.addStream(StreamType.WEBCAM, Activity.AUDIO);
 						sd.setWidth(120).setHeight(90);
 						c.restoreActivities(sd);
-						KStream stream = join(sd, processor.getHandler());
+						KStream stream = join(sd);
 						stream.startBroadcast(sd, "", () -> {});
 						processor.getClientManager().update(c);
 					});

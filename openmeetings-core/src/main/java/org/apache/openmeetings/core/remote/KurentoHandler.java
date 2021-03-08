@@ -41,7 +41,6 @@ import javax.annotation.PreDestroy;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 
-import org.apache.openmeetings.core.sip.SipManager;
 import org.apache.openmeetings.core.util.WebSocketHelper;
 import org.apache.openmeetings.db.dao.record.RecordingChunkDao;
 import org.apache.openmeetings.db.dao.room.RoomDao;
@@ -130,8 +129,6 @@ public class KurentoHandler {
 	private TestStreamProcessor testProcessor;
 	@Autowired
 	private StreamProcessor streamProcessor;
-	@Autowired
-	private SipManager sipManager;
 
 	boolean isConnected() {
 		boolean connctd = connected.get() && client != null && !client.isClosed();
@@ -403,10 +400,6 @@ public class KurentoHandler {
 
 	StreamProcessor getStreamProcessor() {
 		return streamProcessor;
-	}
-
-	SipManager getSipManager() {
-		return sipManager;
 	}
 
 	RecordingChunkDao getChunkDao() {

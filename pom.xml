@@ -501,6 +501,11 @@
 				</exclusions>
 			</dependency>
 			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-aspects</artifactId>
+				<version>${spring.version}</version>
+			</dependency>
+			<dependency>
 				<groupId>org.mnode.ical4j</groupId>
 				<artifactId>ical4j</artifactId>
 				<version>${ical4j.version}</version>
@@ -743,6 +748,10 @@
 			<groupId>javax.servlet</groupId>
 			<artifactId>javax.servlet-api</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-aspects</artifactId>
+		</dependency>
 	</dependencies>
 	<build>
 		<plugins>
@@ -878,6 +887,10 @@
 						</goals>
 					</execution>
 				</executions>
+			</plugin>
+			<plugin>
+				<groupId>com.nickwongdev</groupId>
+				<artifactId>aspectj-maven-plugin</artifactId>
 			</plugin>
 		</plugins>
  		<pluginManagement>
@@ -1162,6 +1175,28 @@
 						<installDirectory>${project.build.directory}</installDirectory>
 					</configuration>
 				</plugin>
+				<plugin>
+					<groupId>com.nickwongdev</groupId>
+					<artifactId>aspectj-maven-plugin</artifactId>
+					<version>1.12.6</version>
+					<configuration>
+						<complianceLevel>${jdk.version}</complianceLevel>
+						<Xlint>ignore</Xlint>
+						<aspectLibraries>
+							<aspectLibrary>
+								<groupId>org.springframework</groupId>
+								<artifactId>spring-aspects</artifactId>
+							</aspectLibrary>
+						</aspectLibraries>
+					</configuration>
+					<executions>
+						<execution>
+							<goals>
+								<goal>compile</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
 			</plugins>
 		</pluginManagement>
 	</build>
@@ -1197,22 +1232,6 @@
 					</reportSet>
 				</reportSets>
 			</plugin>
-			<!-- plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-checkstyle-plugin</artifactId>
-				<version>${maven-checkstyle-plugin.version}</version>
-				<configuration>
-					<skip>${om.quick.build}</skip>
-					<includeTestSourceDirectory>true</includeTestSourceDirectory>
-				</configuration>
-				<reportSets>
-					<reportSet>
-						<reports>
-							<report>checkstyle</report>
-						</reports>
-					</reportSet>
-				</reportSets>
-			</plugin-->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-report-plugin</artifactId>

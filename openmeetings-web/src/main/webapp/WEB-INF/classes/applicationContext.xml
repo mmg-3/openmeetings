@@ -40,6 +40,7 @@
 
 	<tx:annotation-driven transaction-manager="transactionManager" proxy-target-class="true" />
 	<context:annotation-config />
+	<context:spring-configured/>
 	<!-- Start annotation Prometheus metrics
 	<aop:aspectj-autoproxy/>
 	End annotation -->
