@@ -37,7 +37,6 @@ import org.apache.openmeetings.core.converter.IRecordingConverter;
 import org.apache.openmeetings.core.converter.InterviewConverter;
 import org.apache.openmeetings.core.converter.RecordingConverter;
 import org.apache.openmeetings.core.util.WebSocketHelper;
-import org.apache.openmeetings.db.dao.record.RecordingDao;
 import org.apache.openmeetings.db.entity.basic.Client;
 import org.apache.openmeetings.db.entity.basic.Client.Activity;
 import org.apache.openmeetings.db.entity.basic.Client.StreamDesc;
@@ -69,8 +68,6 @@ public class StreamProcessor implements IStreamProcessor {
 
 	@Autowired
 	private IClientManager cm;
-	@Autowired
-	private RecordingDao recDao;
 	@Autowired
 	private KurentoHandler kHandler;
 	@Autowired
@@ -322,7 +319,7 @@ public class StreamProcessor implements IStreamProcessor {
 
 	private void startSharing(Client c, Optional<StreamDesc> osd, JSONObject msg, Activity a) {
 		if (kHandler.isConnected() && c.getRoomId() != null) {
-			kHandler.getRoom(c.getRoomId()).startSharing(this, cm, c, osd, msg, a);
+			kHandler.getRoom(c.getRoomId()).startSharing(c, osd, msg, a);
 		}
 	}
 
@@ -484,18 +481,6 @@ public class StreamProcessor implements IStreamProcessor {
 
 	KStream getByUid(String uid) {
 		return uid == null ? null : streamByUid.get(uid);
-	}
-
-	KurentoHandler getHandler() {
-		return kHandler;
-	}
-
-	IClientManager getClientManager() {
-		return cm;
-	}
-
-	RecordingDao getRecordingDao() {
-		return recDao;
 	}
 
 	@Override

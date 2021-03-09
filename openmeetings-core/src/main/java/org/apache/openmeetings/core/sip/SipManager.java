@@ -299,7 +299,7 @@ public class SipManager implements ISipManager {
 			ports.flip(free);
 			port = minLocalWsPort + free;
 		}
-		return Optional.of(new SipStackProcessor(this, name, port, callbacks));
+		return Optional.of(new SipStackProcessor(name, port, callbacks));
 	}
 
 	void freePort(int port) {

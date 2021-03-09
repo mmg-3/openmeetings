@@ -47,6 +47,7 @@ import org.apache.openmeetings.core.sip.ISipCallbacks;
 import org.apache.openmeetings.core.sip.SipManager;
 import org.apache.openmeetings.core.sip.SipStackProcessor;
 import org.apache.openmeetings.core.util.WebSocketHelper;
+import org.apache.openmeetings.db.dao.record.RecordingChunkDao;
 import org.apache.openmeetings.db.entity.basic.Client;
 import org.apache.openmeetings.db.entity.basic.Client.Activity;
 import org.apache.openmeetings.db.entity.basic.Client.StreamDesc;
@@ -84,6 +85,8 @@ public class KStream extends AbstractStream implements ISipCallbacks {
 	private KurentoHandler kHandler;
 	@Autowired
 	private StreamProcessor processor;
+	@Autowired
+	private RecordingChunkDao chunkDao;
 	@Autowired
 	private SipManager sipManager;
 
@@ -348,8 +351,8 @@ public class KStream extends AbstractStream implements ISipCallbacks {
 		recorder = createRecorderEndpoint(pipeline, getRecUri(getRecordingChunk(getRoomId(), chunkUid)), profile);
 		setTags(recorder, uid);
 
-		recorder.addRecordingListener(evt -> chunkId = kRoom.getChunkDao().start(kRoom.getRecordingId(), type, chunkUid, sid));
-		recorder.addStoppedListener(evt -> kRoom.getChunkDao().stop(chunkId));
+		recorder.addRecordingListener(evt -> chunkId = chunkDao.start(kRoom.getRecordingId(), type, chunkUid, sid));
+		recorder.addStoppedListener(evt -> chunkDao.stop(chunkId));
 		switch (profile) {
 			case WEBM:
 				outgoingMedia.connect(recorder, MediaType.AUDIO);

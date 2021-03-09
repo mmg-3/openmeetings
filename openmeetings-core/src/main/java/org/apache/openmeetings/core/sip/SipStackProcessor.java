@@ -59,6 +59,9 @@ import javax.sip.message.Response;
 import org.apache.openmeetings.db.entity.room.Room;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowire;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Configurable;
 
 import gov.nist.javax.sip.DialogTimeoutEvent;
 import gov.nist.javax.sip.SipListenerExt;
@@ -69,6 +72,7 @@ import gov.nist.javax.sip.clientauthutils.AuthenticationHelper;
 import gov.nist.javax.sip.clientauthutils.UserCredentials;
 import gov.nist.javax.sip.stack.NioMessageProcessorFactory;
 
+@Configurable(autowire = Autowire.BY_TYPE, preConstruction = true)
 public class SipStackProcessor implements SipListenerExt {
 	private static final Logger log = LoggerFactory.getLogger(SipStackProcessor.class);
 	private static final String SIP_TRANSPORT = "ws";
@@ -76,7 +80,9 @@ public class SipStackProcessor implements SipListenerExt {
 		return t -> {};
 	}
 
-	private final SipManager manager;
+	@Autowired
+	private SipManager manager;
+
 	private final ISipCallbacks callbacks;
 	private final String sipHost;
 	private final int wsPort;
@@ -96,8 +102,7 @@ public class SipStackProcessor implements SipListenerExt {
 	private final Random rnd = new Random();
 	private Dialog dialog;
 
-	SipStackProcessor(SipManager manager, String name, int localWsPort, ISipCallbacks callbacks) throws Exception {
-		this.manager = manager;
+	SipStackProcessor(String name, int localWsPort, ISipCallbacks callbacks) throws Exception {
 		this.callbacks = callbacks;
 		this.sipHost = manager.getSipHostname();
 		this.wsPort = manager.getWsPort();

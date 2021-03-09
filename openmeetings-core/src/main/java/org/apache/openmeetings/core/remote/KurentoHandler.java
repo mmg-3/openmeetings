@@ -42,7 +42,6 @@ import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 
 import org.apache.openmeetings.core.util.WebSocketHelper;
-import org.apache.openmeetings.db.dao.record.RecordingChunkDao;
 import org.apache.openmeetings.db.dao.room.RoomDao;
 import org.apache.openmeetings.db.entity.basic.Client;
 import org.apache.openmeetings.db.entity.basic.Client.Activity;
@@ -123,8 +122,6 @@ public class KurentoHandler {
 	private IClientManager cm;
 	@Autowired
 	private RoomDao roomDao;
-	@Autowired
-	private RecordingChunkDao chunkDao;
 	@Autowired
 	private TestStreamProcessor testProcessor;
 	@Autowired
@@ -306,7 +303,7 @@ public class KurentoHandler {
 		return rooms.computeIfAbsent(roomId, k -> {
 			log.debug("Room {} does not exist. Will create now!", roomId);
 			Room r = roomDao.get(roomId);
-			return new KRoom(this, r);
+			return new KRoom(r);
 		});
 	}
 
@@ -392,18 +389,6 @@ public class KurentoHandler {
 
 	String getKuid() {
 		return kuid;
-	}
-
-	public TestStreamProcessor getTestProcessor() {
-		return testProcessor;
-	}
-
-	StreamProcessor getStreamProcessor() {
-		return streamProcessor;
-	}
-
-	RecordingChunkDao getChunkDao() {
-		return chunkDao;
 	}
 
 	static int getFlowoutTimeout() {

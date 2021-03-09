@@ -49,13 +49,22 @@ import org.kurento.client.RecorderEndpoint;
 import org.kurento.client.WebRtcEndpoint;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowire;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Configurable;
 
 import com.github.openjson.JSONObject;
 
+@Configurable(autowire = Autowire.BY_TYPE)
 public class KTestStream extends AbstractStream {
 	private static final Logger log = LoggerFactory.getLogger(KTestStream.class);
 	private static final Map<String, String> TAGS = Map.of(TAG_MODE, MODE_TEST, TAG_ROOM, MODE_TEST);
-	private final KurentoHandler kHandler;
+
+	@Autowired
+	private KurentoHandler kHandler;
+	@Autowired
+	private TestStreamProcessor processor;
+
 	private MediaPipeline pipeline;
 	private WebRtcEndpoint webRtcEndpoint;
 	private PlayerEndpoint player;
@@ -65,9 +74,8 @@ public class KTestStream extends AbstractStream {
 	private ScheduledFuture<?> recHandle;
 	private int recTime;
 
-	public KTestStream(IWsClient c, JSONObject msg, KurentoHandler kHandler) {
+	public KTestStream(IWsClient c, JSONObject msg) {
 		super(null, c.getUid());
-		this.kHandler = kHandler;
 		createPipeline(() -> startTestRecording(c, msg));
 	}
 
@@ -251,7 +259,7 @@ public class KTestStream extends AbstractStream {
 		releasePlayer();
 		releaseRecorder();
 		if (remove) {
-			kHandler.getTestProcessor().release(this, true);
+			processor.release(this, true);
 		}
 	}
 }
